@@ -1,0 +1,13 @@
+[package]
+name = "usb_msc_device"
+description = "USB Mass Storage device class (Bulk-Only Transport, SCSI transparent) for embassy-usb: several LUNs on one interface, an async Lun trait, media change / unit attention, write protect"
+version = "0.1.0"
+edition = "2024"
+authors = ["Roman Isaikin <roman@vhrd.tech>"]
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/vhrdtech/usb_msc_device"
+rust-version = "1.88"
+
+[dependencies]
+
+[dev-dependencies]
