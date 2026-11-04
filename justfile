@@ -3,11 +3,14 @@
 default:
     @just --list
 
-# The tests. `just test`: all of them (test-all), the run of the `tpm land` gate. `just test --changed`: only the
-# workspace crates changed against main and the crates that depend on them (tpm test changed), what a session runs
-# before tpm work ready.
+# The tests. `just test`: all of them (test-all), the gate run before merging. `just test --changed`: only the
+# workspace crates changed against main and the crates that depend on them, what to run before opening a PR
+# (uses our internal tooling when available, otherwise falls back to the full suite).
 test *flags:
-    if [ "{{flags}}" = "--changed" ]; then tpm test changed -- cargo nextest run --workspace; else {{just_executable()}} test-all {{flags}}; fi
+    if [ "{{flags}}" = "--changed" ]; then \
+        if command -v tpm >/dev/null 2>&1; then tpm test changed -- cargo nextest run --workspace; \
+        else echo "tpm not found; running the full test suite instead" >&2; {{just_executable()}} test-all; fi; \
+    else {{just_executable()}} test-all {{flags}}; fi
 
 # Tests (host; a fake Lun, no real USB hardware needed) plus a no_std build check
 test-all:
@@ -25,6 +28,6 @@ lint:
 # Library only: nothing to install on this PC
 install: test
 
-# Bring this PC up to main
+# Bring this checkout up to main
 deploy:
-    tpm repos pull usb_msc_device
+    if command -v tpm >/dev/null 2>&1; then tpm repos pull usb_msc_device; else git pull --ff-only; fi

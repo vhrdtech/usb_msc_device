@@ -12,12 +12,12 @@ tied to any one caller. First user: [logring](https://github.com/vhrdtech/logrin
 exFAT volume passthrough and a synthesized read-only log tree), but this crate knows nothing about logring,
 exFAT or logs — only SCSI/MSC.
 
-Sibling repos (tpm project P2628; design: `prj/P2628-logring/design/plan.md` in the tpm folder, not here):
+Sibling repos (design notes kept outside this repo, not here):
 [`logring`](https://github.com/vhrdtech/logring), [`exfat_lite`](https://github.com/vhrdtech/exfat_lite).
 
 **Other people's project**: this might later be offered to `embassy` as an `embassy-usb` device class. Until the
-person decides to open that PR, nothing here is pushed, proposed or discussed on embassy's repo or forums
-(tpm CLAUDE.md "Other people's projects") — it stays its own repo, usable standalone via `path`/git dependency.
+maintainer decides to open that PR, nothing here is pushed, proposed or discussed on embassy's repo or forums —
+it stays its own repo, usable standalone via `path`/git dependency.
 
 ## FEATURES.md is the source of truth
 
@@ -25,9 +25,9 @@ person decides to open that PR, nothing here is pushed, proposed or discussed on
 
 - **Name IDs with a short slug when talking to the user**: `MSC-1 bulk-only-class`, never a bare `MSC-1`. Commit
   messages, CHANGELOG and code `TODO`s keep the bare ID.
-- **New IDs**: `tpm work claim MSC` prints the next free one. Never renumber or reuse IDs.
-- Status ✅ verified against a real host OS mount; 🧪 unit-tested against a fake host/transport only; 📋 planned
-  with a P2628 task; 💡 an idea, not filed as a task yet.
+- **New IDs**: pick the next free number in sequence. Never renumber or reuse IDs.
+- Status ✅ verified against a real host OS mount; 🧪 unit-tested against a fake host/transport only; 📋 planned;
+  💡 an idea, not filed as a task yet.
 
 ## CHANGELOG.md records every change
 
@@ -68,7 +68,7 @@ was actually checked versus only exercised against a fake transport.
 
 ## Dependencies
 
-Pure Rust only; `embassy-usb` is the one real dependency once the device class lands (R9); nothing else without
+Pure Rust only; `embassy-usb` is the one real dependency once the device class lands; nothing else without
 a reason in the commit. Check new dependencies with `cargo tree` for `-sys` crates.
 
 ## Code conventions
@@ -89,13 +89,11 @@ a reason in the commit. Check new dependencies with `cargo tree` for `-sys` crat
 Conventional Commits with a scope: `feat(bot): ...` (bulk-only transport), `fix(scsi): ...`, scopes `bot`,
 `scsi`, `lun`, `build`. Short imperative summary, blank line, body with what and why; reference feature IDs.
 
-Commit on your own initiative on a session branch (`tpm work new SLUG usb_msc_device`), each finished step one
-commit with FEATURES.md and CHANGELOG.md updated in it. When the work is done and the user agrees, `tpm land`
-puts it on main.
+Commit on your own initiative on a feature branch, each finished step one commit with FEATURES.md and
+CHANGELOG.md updated in it. When the work is done and the maintainer agrees, merge it to main.
 
 ## Versions
 
-Landing bumps the version, not each work commit (tpm CLAUDE.md "Landing bumps the version"): session commits add
-CHANGELOG entries under `[Unreleased]` without bumping. This repo's version is its next crates.io release
-(`bump = "at-publish"` in tpm's repos.toml): `tpm land` never bumps or tags it on its own; `tpm release
-usb_msc_device` does, once there is something to publish.
+Merging to main bumps the version, not each work commit: branch commits add CHANGELOG entries under
+`[Unreleased]` without bumping. This repo's version is its next crates.io release: it is only bumped and tagged
+once there is something to publish.
