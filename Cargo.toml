@@ -11,3 +11,6 @@ rust-version = "1.88"
 [dependencies]
 
 [dev-dependencies]
+
+[profile.dev]
+debug = false
